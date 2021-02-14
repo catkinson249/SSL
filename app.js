@@ -1,0 +1,53 @@
+
+var fs = require("fs");
+var http = require("http");
+var path = require("path");
+var url = require("url");
+
+http.createServer(function(req,res){
+
+	var parsed = url.parse(req.url);
+	var filename = path.parse(parsed.pathname);
+
+
+// if statements to check file types
+	// file name = 
+	filen = filename.name==""?"index":filename.name
+	// 
+	ext = filename.ext==""?".html":filename.ext;
+	dir = filename.dir=="/"?"":filename.dir+"/";
+	page = filename.name==""?"index.html":filename.name;
+
+	f=(dir+filen+ext).replace("/","");
+
+	var mimeTypes = {
+		'.html':'text/html',
+		'.js':'text/javascript',
+		'.css':'text/css',
+		'.png':'image/png',
+		'.jpg':'image/jpg',
+		'.gif':'image/gif',
+	};
+
+	if(f){
+
+		fs.readFile(f,function(err,data){
+			if(page){
+				if(mimeTypes.hasOwnProperty(ext)){
+					res.writeHead(200,{'Content-Type':mimeTypes});
+					res.write('<script>var page="'+filename.name+"';</script>");
+					res.end(data,'utf-8');
+				}
+			}
+		})
+	}
+}).listen("8001","127.0.0.1");
+
+
+
+
+
+// HTMLs
+/*
+
+*/
